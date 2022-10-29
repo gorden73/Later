@@ -2,9 +2,11 @@ package ru.practicum.item;
 
 import lombok.Getter;
 import lombok.Setter;
+
 @Setter
 @Getter
 public class ItemInfoWithUrlState implements ItemInfo {
+
     private ItemInfo itemInfo;
 
     private Boolean state;

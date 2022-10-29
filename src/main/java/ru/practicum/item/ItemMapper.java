@@ -2,10 +2,9 @@ package ru.practicum.item;
 
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class ItemMapper {
+
     public static ItemDto toDto(Item item) {
         ItemDto dto = new ItemDto();
         dto.setId(item.getId());

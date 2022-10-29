@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 public class UserDto {
+
     private Long id;
 
     private String firstName;

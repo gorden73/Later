@@ -11,8 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class InvalidArgumentExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value
-            = { IllegalArgumentException.class })
+    @ExceptionHandler(value = { IllegalArgumentException.class })
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Invalid argument";

@@ -30,7 +30,8 @@ public class ItemController {
                           @PathVariable long itemId,
                           @RequestBody Set<String> tags,
                           @RequestParam(value = "replaceTags", required = false) boolean replaceTags,
-                          @RequestParam(value = "unread", required = false) boolean unread) throws IllegalAccessException {
+                          @RequestParam(value = "unread", required = false) boolean unread)
+            throws IllegalAccessException {
         ModifyItemRequest req = new ModifyItemRequest(userId, itemId, tags, replaceTags, unread);
         return itemService.update(req);
     }
@@ -48,7 +49,8 @@ public class ItemController {
     }
 
     @GetMapping("/status")
-    public Collection<ItemInfoWithUrlState> checkUrlsByUserId(@RequestHeader("X-Later-User-Id") long userId) throws URISyntaxException {
+    public Collection<ItemInfoWithUrlState> checkUrlsByUserId(@RequestHeader("X-Later-User-Id") long userId)
+            throws URISyntaxException {
         return itemService.checkItemsUrls(userId);
     }
 }

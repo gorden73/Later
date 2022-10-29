@@ -7,8 +7,6 @@ import java.util.Set;
 
 public interface ItemService {
 
-    List<ItemDto> getItems(long userId);
-
     List<ItemDto> getItems(GetItemRequest req);
 
     ItemDto update(ModifyItemRequest req) throws IllegalAccessException;

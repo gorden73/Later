@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @Slf4j
 class UserServiceImpl implements UserService {
-    private final UserRepository repository;
 
+    private final UserRepository repository;
 
     @Override
     public List<UserDto> getAllUsers() {
