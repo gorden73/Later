@@ -16,8 +16,7 @@ import static org.hamcrest.Matchers.*;
 
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringBootTest/*(properties = {"db.name=testLater"},
-        webEnvironment = SpringBootTest.WebEnvironment.NONE)*/
+@SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
 class UserServiceImplTest {
     private final UserService service;

@@ -9,25 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URISyntaxException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository itemRepository;
-    private final UrlMetadataRetrieverImpl urlMetadataRetriever;
 
-    @Override
-    public List<ItemDto> getItems(long userId) {
-        log.info("Запрошены ссылки пользователя id{}.", userId);
-        return itemRepository.findByUserId(userId)
-                .stream()
-                .map(ItemMapper::toDto)
-                .collect(Collectors.toList());
-    }
+    private final ItemRepository itemRepository;
+
+    private final UrlMetadataRetrieverImpl urlMetadataRetriever;
 
     @Override
     public ItemDto update(ModifyItemRequest req) throws IllegalAccessException {
@@ -48,50 +43,25 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItems(GetItemRequest req) {
-        // Для поиска ссылок используем QueryDSL чтобы было удобно настраивать разные варианты фильтров
         QItem item = QItem.item;
-        // Мы будем анализировать какие фильтры указал пользователь
-        // И все нужные условия фильтрации будем собирать в список
         List<BooleanExpression> conditions = new ArrayList<>();
-        // Условие, которое будет проверяться всегда - пользователь сделавший запрос
-        // должен быть тем же пользователем, что сохранил ссылку
         conditions.add(item.userId.eq(req.getUserId()));
-
-        // Проверяем один из фильтров указанных в запросе - state
         GetItemRequest.State state = req.getState();
-        // Если пользователь указал, что его интересуют все ссылки, вне зависимости
-        // от состояния, тогда пропускаем этот фильтр. В обратном случае анализируем
-        // указанное состояние и формируем подходящее условие для запроса
-        if(!state.equals(GetItemRequest.State.ALL)) {
+        if (!state.equals(GetItemRequest.State.ALL)) {
             conditions.add(makeStateCondition(state));
         }
-
-        // Если пользователь указал, что его интересуют ссылки вне зависимости
-        // от типа их содержимого, то пропускаем фильтра, иначе анализируем
-        // указанный тип контента и формируем соответствующее условие
         GetItemRequest.ContentType contentType = req.getContentType();
-        if(!contentType.equals(GetItemRequest.ContentType.ALL)) {
+        if (!contentType.equals(GetItemRequest.ContentType.ALL)) {
             conditions.add(makeContentTypeCondition(contentType));
         }
-
-        // если пользователя интересуют ссылки с конкретными тэгами,
-        // то добавляем это условие в запрос
-        if(req.hasTags()) {
+        if (req.hasTags()) {
             conditions.add(item.tags.any().in(req.getTags()));
         }
-
-        // из всех подготовленных условий, составляем единое условие
         BooleanExpression finalCondition = conditions.stream()
                 .reduce(BooleanExpression::and)
                 .get();
-
-        // анализируем, какой вариант сортировки выбрал пользователь
-        // и какое количество элементов он выбрал для отображения
         Sort sort = makeOrderByClause(req.getSort());
         PageRequest pageRequest = PageRequest.of(0, req.getLimit(), sort);
-
-        // выполняем запрос к базе данных со всеми подготовленными настройками
-        // конвертируем результат в DTO и возвращаем контроллеру
         Iterable<Item> items = itemRepository.findAll(finalCondition, pageRequest);
         List<ItemDto> dtoList = new ArrayList<>();
         items.forEach(i -> dtoList.add(ItemMapper.toDto(i)));
@@ -135,7 +105,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public void deleteItem(long userId, long itemId) throws IllegalAccessException {
         Item item = itemRepository.findItemById(itemId).orElseThrow(() -> new IllegalArgumentException("Такой вещи " +
-                        "нет."));
+                "нет."));
         if (item.getUserId() != userId) {
             throw new IllegalAccessException("Пользователь не может удалить вещь.");
         }
@@ -149,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BooleanExpression makeStateCondition(GetItemRequest.State state) {
-        if(state.equals(GetItemRequest.State.READ)) {
+        if (state.equals(GetItemRequest.State.READ)) {
             return QItem.item.unread.isFalse();
         } else {
             return QItem.item.unread.isTrue();
@@ -157,9 +127,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BooleanExpression makeContentTypeCondition(GetItemRequest.ContentType contentType) {
-        if(contentType.equals(GetItemRequest.ContentType.ARTICLE)) {
+        if (contentType.equals(GetItemRequest.ContentType.ARTICLE)) {
             return QItem.item.mimeType.eq("text");
-        } else if(contentType.equals(GetItemRequest.ContentType.IMAGE)) {
+        } else if (contentType.equals(GetItemRequest.ContentType.IMAGE)) {
             return QItem.item.mimeType.eq("image");
         } else {
             return QItem.item.mimeType.eq("video");
@@ -168,11 +138,15 @@ public class ItemServiceImpl implements ItemService {
 
     private Sort makeOrderByClause(GetItemRequest.Sort sort) {
         switch (sort) {
-            case TITLE: return Sort.by("title").ascending();
-            case SITE: return Sort.by("resolvedUrl").ascending();
-            case OLDEST: return Sort.by("dateResolved").ascending();
+            case TITLE:
+                return Sort.by("title").ascending();
+            case SITE:
+                return Sort.by("resolvedUrl").ascending();
+            case OLDEST:
+                return Sort.by("dateResolved").ascending();
             case NEWEST:
-            default: return Sort.by("dateResolved").descending();
+            default:
+                return Sort.by("dateResolved").descending();
         }
     }
 }

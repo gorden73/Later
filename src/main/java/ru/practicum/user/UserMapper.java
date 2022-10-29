@@ -6,6 +6,7 @@ import java.time.ZoneOffset;
 
 @Component
 public class UserMapper {
+
     public static UserDto toDTO(User user) {
         if (user.getRegistrationDate() != null) {
             return new UserDto(

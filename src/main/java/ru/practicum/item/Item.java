@@ -1,6 +1,5 @@
 package ru.practicum.item;
 
-import com.querydsl.core.annotations.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
