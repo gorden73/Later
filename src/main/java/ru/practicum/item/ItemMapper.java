@@ -8,6 +8,7 @@ public class ItemMapper {
     public static ItemDto toDto(Item item) {
         ItemDto dto = new ItemDto();
         dto.setId(item.getId());
+        dto.setUserId(item.getUserId());
         dto.setUrl(item.getUrl());
         dto.setResolvedUrl(item.getResolvedUrl());
         dto.setMimeType(item.getMimeType());
@@ -22,7 +23,6 @@ public class ItemMapper {
 
     public static Item toItem(ItemDto dto) {
         return new Item(
-                dto.getUserId(),
                 dto.getUrl(),
                 dto.getTags());
     }

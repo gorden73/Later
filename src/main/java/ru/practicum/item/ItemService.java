@@ -11,7 +11,7 @@ public interface ItemService {
 
     ItemDto update(ModifyItemRequest req) throws IllegalAccessException;
 
-    ItemDto addNewItem(long userId, ItemDto item);
+    ItemDto addNewItem(Long userId, ItemDto item);
 
     void deleteItem(long userId, long itemId) throws IllegalAccessException;
 

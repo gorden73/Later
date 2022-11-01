@@ -11,11 +11,9 @@ public interface ItemRepository extends JpaRepository<Item, Long>, ItemRepositor
 
     Optional<Item> findItemById(long itemId);
 
-    List<Item> findByUserId(long userId);
-
     List<ItemInfo> findAllByUserId(long userId);
 
     void deleteByUserIdAndId(long userId, long itemId);
 
-    Item findItemByResolvedUrl(String resolvedUrl);
+    Item findItemByUserIdAndResolvedUrl(Long userId, String resolvedUrl);
 }

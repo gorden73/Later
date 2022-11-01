@@ -15,11 +15,11 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> get(@RequestHeader("X-Later-User-Id") long userId,
+    public List<ItemDto> get(@RequestHeader("X-Later-User-Id") Long userId,
                              @RequestParam(defaultValue = "unread") String state,
                              @RequestParam(defaultValue = "all") String contentType,
                              @RequestParam(defaultValue = "newest") String sort,
-                             @RequestParam(defaultValue = "10") int limit,
+                             @RequestParam(defaultValue = "10") Integer limit,
                              @RequestParam(required = false) List<String> tags) {
         final GetItemRequest req = new GetItemRequest(userId, state, contentType, sort, limit, tags);
         return itemService.getItems(req);
@@ -27,7 +27,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto update(@RequestHeader("X-Later-User-Id") Long userId,
-                          @PathVariable long itemId,
+                          @PathVariable Long itemId,
                           @RequestBody Set<String> tags,
                           @RequestParam(value = "replaceTags", required = false) boolean replaceTags,
                           @RequestParam(value = "unread", required = false) boolean unread)
@@ -43,13 +43,13 @@ public class ItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public void deleteItem(@RequestHeader("X-Later-User-Id") long userId,
-                           @PathVariable long itemId) throws IllegalAccessException {
+    public void deleteItem(@RequestHeader("X-Later-User-Id") Long userId,
+                           @PathVariable Long itemId) throws IllegalAccessException {
         itemService.deleteItem(userId, itemId);
     }
 
     @GetMapping("/status")
-    public Collection<ItemInfoWithUrlState> checkUrlsByUserId(@RequestHeader("X-Later-User-Id") long userId)
+    public Collection<ItemInfoWithUrlState> checkUrlsByUserId(@RequestHeader("X-Later-User-Id") Long userId)
             throws URISyntaxException {
         return itemService.checkItemsUrls(userId);
     }

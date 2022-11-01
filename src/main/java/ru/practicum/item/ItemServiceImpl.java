@@ -24,6 +24,39 @@ public class ItemServiceImpl implements ItemService {
 
     private final UrlMetadataRetrieverImpl urlMetadataRetriever;
 
+    @Transactional
+    @Override
+    public ItemDto addNewItem(Long userId, ItemDto itemDTO) {
+        Item item = ItemMapper.toItem(itemDTO);
+        Item result = null;
+        Set<String> tags = item.getTags();
+        item.setUserId(userId);
+        UrlMetadata urlMetadata = urlMetadataRetriever.retrieve(item.getUrl());
+        if (urlMetadata != null) {
+            if (urlMetadata.getResolvedUrl() != null) {
+                Item itemDb = itemRepository.findItemByUserIdAndResolvedUrl(userId, urlMetadata.getResolvedUrl());
+                if (itemDb != null) {
+                    Set<String> tagsDb = itemDb.getTags();
+                    tagsDb.addAll(tags);
+                    itemDb.setTags(tagsDb);
+                    result = itemDb;
+                } else {
+                    item.setResolvedUrl(urlMetadata.getResolvedUrl());
+                    item.setMimeType(urlMetadata.getMimeType());
+                    item.setTitle(urlMetadata.getTitle());
+                    item.setHasImage(urlMetadata.isHasImage());
+                    item.setHasVideo(urlMetadata.isHasVideo());
+                    item.setDateResolved(urlMetadata.getDateResolved());
+                }
+            }
+        }
+        if (result == null) {
+            log.info("Добавлена ссылка {} пользователя id{}.", item.getUrl(), userId);
+            result = itemRepository.save(item);
+        }
+        return ItemMapper.toDto(result);
+    }
+
     @Override
     public ItemDto update(ModifyItemRequest req) throws IllegalAccessException {
         Item item = itemRepository.getById(req.getItemId());
@@ -39,6 +72,23 @@ public class ItemServiceImpl implements ItemService {
             item.setUnread(true);
         }
         return ItemMapper.toDto(itemRepository.save(item));
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(long userId, long itemId) throws IllegalAccessException {
+        Item item = itemRepository.findItemById(itemId).orElseThrow(() -> new IllegalArgumentException("Такой вещи " +
+                "нет."));
+        if (item.getUserId() != userId) {
+            throw new IllegalAccessException("Пользователь не может удалить вещь.");
+        }
+        log.info("Удалена ссылка {} пользователя id{}.", itemId, userId);
+        itemRepository.deleteByUserIdAndId(userId, itemId);
+    }
+
+    @Override
+    public Collection<ItemInfoWithUrlState> checkItemsUrls(long userId) throws URISyntaxException {
+        return itemRepository.checkItemsUrls(userId);
     }
 
     @Override
@@ -66,56 +116,6 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> dtoList = new ArrayList<>();
         items.forEach(i -> dtoList.add(ItemMapper.toDto(i)));
         return dtoList;
-    }
-
-    @Transactional
-    @Override
-    public ItemDto addNewItem(long userId, ItemDto itemDTO) {
-        Item item = ItemMapper.toItem(itemDTO);
-        Item result = null;
-        Set<String> tags = item.getTags();
-        item.setUserId(userId);
-        Item itemDb = itemRepository.findItemByResolvedUrl(item.getResolvedUrl());
-        UrlMetadata urlMetadata = urlMetadataRetriever.retrieve(item.getUrl());
-        if (urlMetadata != null) {
-            if (itemDb != null) {
-                if (urlMetadata.getResolvedUrl().equals(itemDb.getResolvedUrl())) {
-                    Set<String> tagsDb = itemDb.getTags();
-                    tagsDb.addAll(tags);
-                    itemDb.setTags(tagsDb);
-                    result = itemDb;
-                }
-            } else {
-                item.setResolvedUrl(urlMetadata.getResolvedUrl());
-                item.setMimeType(urlMetadata.getMimeType());
-                item.setTitle(urlMetadata.getTitle());
-                item.setHasImage(urlMetadata.isHasImage());
-                item.setHasVideo(urlMetadata.isHasVideo());
-                item.setDateResolved(urlMetadata.getDateResolved());
-            }
-        }
-        if (result == null) {
-            log.info("Добавлена ссылка {} пользователя id{}.", item.getUrl(), userId);
-            result = itemRepository.save(item);
-        }
-        return ItemMapper.toDto(result);
-    }
-
-    @Override
-    @Transactional
-    public void deleteItem(long userId, long itemId) throws IllegalAccessException {
-        Item item = itemRepository.findItemById(itemId).orElseThrow(() -> new IllegalArgumentException("Такой вещи " +
-                "нет."));
-        if (item.getUserId() != userId) {
-            throw new IllegalAccessException("Пользователь не может удалить вещь.");
-        }
-        log.info("Удалена ссылка {} пользователя id{}.", itemId, userId);
-        itemRepository.deleteByUserIdAndId(userId, itemId);
-    }
-
-    @Override
-    public Collection<ItemInfoWithUrlState> checkItemsUrls(long userId) throws URISyntaxException {
-        return itemRepository.checkItemsUrls(userId);
     }
 
     private BooleanExpression makeStateCondition(GetItemRequest.State state) {

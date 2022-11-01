@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ItemDto {
     private Long id;
-    private long userId;
+    private Long userId;
     private String url;
     private String resolvedUrl;
     private String mimeType;
