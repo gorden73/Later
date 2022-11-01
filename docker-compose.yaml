@@ -5,6 +5,8 @@ services:
     image: postgres:13.7-alpine
     volumes:
       - /var/lib/postgresql/data/
+    ports:
+      - "6542:5432"
     environment:
       - POSTGRES_DB=later
       - POSTGRES_USER=newLater
@@ -14,6 +16,7 @@ services:
     build: .
     ports:
       - "8080:8080"
+      - "8081:8081"
     depends_on:
       - db
     environment:

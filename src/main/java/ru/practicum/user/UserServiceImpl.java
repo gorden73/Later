@@ -31,6 +31,7 @@ class UserServiceImpl implements UserService {
     public UserDto saveUser(UserDto userDTO) {
         User user = UserMapper.toUser(userDTO);
         user.setRegistrationDate(LocalDateTime.now());
+        user.setState(UserState.ACTIVE);
         log.info("Сохранен пользователь email {}.", user.getEmail());
         return UserMapper.toDTO(repository.save(user));
     }

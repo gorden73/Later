@@ -18,8 +18,10 @@ class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
     private String url;
 
     @ElementCollection
@@ -32,26 +34,24 @@ class Item {
 
     @Column(name = "resolved_url")
     private String resolvedUrl;
+
     @Column(name = "mime_type")
     private String mimeType;
+
     private String title;
+
     @Column(name = "has_image")
     private boolean hasImage;
+
     @Column(name = "has_video")
     private boolean hasVideo;
+
     @Column(name = "date_resolved")
     private Instant dateResolved;
+
     private boolean unread = true;
 
-    public Item(Long userId, String url, Set<String> tags) {
-        this.userId = userId;
-        this.url = url;
-        this.tags = tags;
-    }
-
-    public Item(Long id, Long userId, String url, Set<String> tags) {
-        this.id = id;
-        this.userId = userId;
+    public Item(String url, Set<String> tags) {
         this.url = url;
         this.tags = tags;
     }

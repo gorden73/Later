@@ -120,19 +120,19 @@ public class UrlMetadataRetrieverImpl implements UrlMetadataRetriever {
                 .build();
     }
 
-    private UrlMetadataImpl handleVideo(URI url) {
-        String name = new File(url).getName();
-        return UrlMetadataImpl.builder()
-                .title(name)
-                .hasVideo(true)
-                .build();
-    }
-
     private UrlMetadataImpl handleImage(URI url) {
         String name = new File(url).getName();
         return UrlMetadataImpl.builder()
                 .title(name)
                 .hasImage(true)
+                .build();
+    }
+
+    private UrlMetadataImpl handleVideo(URI url) {
+        String name = new File(url).getName();
+        return UrlMetadataImpl.builder()
+                .title(name)
+                .hasVideo(true)
                 .build();
     }
 }
