@@ -1,4 +1,4 @@
-package ru.practicum.item;
+package ru.practicum.item.exception;
 
 public class ItemRetrieverException extends RuntimeException {
 

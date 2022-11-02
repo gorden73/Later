@@ -2,6 +2,7 @@ package ru.practicum.item;
 
 import ru.practicum.item.dto.ItemDto;
 import ru.practicum.item.model.GetItemRequest;
+import ru.practicum.item.model.ItemInfoWithUrlState;
 import ru.practicum.item.model.ModifyItemRequest;
 
 import java.net.URISyntaxException;

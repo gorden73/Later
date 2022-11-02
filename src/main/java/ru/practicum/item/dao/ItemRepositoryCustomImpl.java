@@ -1,4 +1,4 @@
-package ru.practicum.item;
+package ru.practicum.item.dao;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
@@ -7,6 +7,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.item.model.ItemInfoWithUrlState;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,7 +16,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
+
     private final ItemRepository repo;
+
     private final RestTemplate restTemplate;
 
     public ItemRepositoryCustomImpl(@Lazy ItemRepository repo) {
@@ -31,14 +34,16 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .collect(Collectors.toList());
     }
 
-    private boolean checkUrl(String url) {
+    private HttpStatus checkUrl(String url) {
+        HttpStatus status;
         try {
             RequestEntity<byte[]> request = new RequestEntity<>(HttpMethod.GET, new URI(url));
             ResponseEntity<byte[]> response = restTemplate.exchange(request, byte[].class);
-            return response.getStatusCode().equals(HttpStatus.OK);
+            status = response.getStatusCode();
         } catch (URISyntaxException e) {
             e.printStackTrace();
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return false;
+        return status;
     }
 }

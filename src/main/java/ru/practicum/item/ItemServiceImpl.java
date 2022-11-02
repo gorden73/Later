@@ -7,11 +7,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.item.dao.ItemRepository;
 import ru.practicum.item.dto.ItemDto;
 import ru.practicum.item.dto.ItemMapper;
-import ru.practicum.item.model.GetItemRequest;
-import ru.practicum.item.model.Item;
-import ru.practicum.item.model.ModifyItemRequest;
+import ru.practicum.item.model.*;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;

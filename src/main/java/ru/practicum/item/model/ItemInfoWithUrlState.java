@@ -1,19 +1,25 @@
-package ru.practicum.item;
+package ru.practicum.item.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
 public class ItemInfoWithUrlState implements ItemInfo {
 
+    @JsonIgnore
     private ItemInfo itemInfo;
 
-    private Boolean state;
+    private String url;
 
-    public ItemInfoWithUrlState(ItemInfo itemInfo, Boolean state) {
+    private HttpStatus status;
+
+    public ItemInfoWithUrlState(ItemInfo itemInfo, HttpStatus status) {
         this.itemInfo = itemInfo;
-        this.state = state;
+        this.url = getUrl();
+        this.status = status;
     }
 
     @Override
@@ -24,10 +30,5 @@ public class ItemInfoWithUrlState implements ItemInfo {
     @Override
     public String getUrl() {
         return itemInfo.getUrl();
-    }
-
-    @Override
-    public Boolean getState() {
-        return itemInfo.getState();
     }
 }

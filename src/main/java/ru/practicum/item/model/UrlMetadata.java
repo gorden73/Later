@@ -1,8 +1,8 @@
-package ru.practicum.item;
+package ru.practicum.item.model;
 
 import java.time.Instant;
 
-interface UrlMetadata {
+public interface UrlMetadata {
 
     String getResolvedUrl();
 

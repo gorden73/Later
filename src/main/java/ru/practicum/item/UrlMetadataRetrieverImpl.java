@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
+import ru.practicum.item.exception.ItemRetrieverException;
+import ru.practicum.item.model.UrlMetadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public class UrlMetadataRetrieverImpl implements UrlMetadataRetriever {
     private final HttpClient client;
 
     UrlMetadataRetrieverImpl(@Value("${url-metadata-retriever.read_timeout-sec:120}") int readTimeout) {
-        this.client =  HttpClient.newBuilder()
+        this.client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS)
                 .connectTimeout(Duration.ofSeconds(readTimeout))
                 .build();
@@ -95,13 +97,13 @@ public class UrlMetadataRetrieverImpl implements UrlMetadataRetriever {
                     + " because the thread was interrupted.", e);
         }
         HttpStatus status = HttpStatus.resolve(response.statusCode());
-        if(status == null) {
+        if (status == null) {
             throw new ItemRetrieverException("The server returned an unknown status code: " + response.statusCode());
         }
-        if(status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN)) {
+        if (status.equals(HttpStatus.UNAUTHORIZED) || status.equals(HttpStatus.FORBIDDEN)) {
             throw new ItemRetrieverException("There is no access to the resource at the specified URL: " + url);
         }
-        if(status.isError()) {
+        if (status.isError()) {
             throw new ItemRetrieverException("Cannot get the data on the item because the server returned an error."
                     + "Response status: " + status);
         }
