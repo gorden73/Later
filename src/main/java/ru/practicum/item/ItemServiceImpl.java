@@ -7,6 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.item.dto.ItemDto;
+import ru.practicum.item.dto.ItemMapper;
+import ru.practicum.item.model.GetItemRequest;
+import ru.practicum.item.model.Item;
+import ru.practicum.item.model.ModifyItemRequest;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -58,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto update(ModifyItemRequest req) throws IllegalAccessException {
+    public ItemDto updateItem(ModifyItemRequest req) throws IllegalAccessException {
         Item item = itemRepository.getById(req.getItemId());
         if (item.getUserId() != req.getUserId()) {
             throw new IllegalAccessException("У пользователя нет доступа для редактирования.");
@@ -68,9 +73,7 @@ public class ItemServiceImpl implements ItemService {
         } else {
             item.getTags().addAll(req.getTags());
         }
-        if (req.isUnread()) {
-            item.setUnread(true);
-        }
+        item.setUnread(req.isUnread());
         return ItemMapper.toDto(itemRepository.save(item));
     }
 

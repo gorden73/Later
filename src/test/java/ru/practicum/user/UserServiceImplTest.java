@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.user.dto.UserDto;
+import ru.practicum.user.model.UserState;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,8 +19,9 @@ import static org.hamcrest.Matchers.*;
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource("/test.properties")
 class UserServiceImplTest {
+
     private final UserService service;
 
     @Test
@@ -62,21 +65,21 @@ class UserServiceImplTest {
 
     @Test
     void saveUser() {
-        UserDto user = new UserDto(1L,
+        UserDto userDto = new UserDto(1L,
                 "PabloDto",
                 "PicassoDto",
                 "picassoDto@mail.ru",
                 LocalDate.of(1990, 12, 12),
-                UserState.ACTIVE);
-        service.saveUser(user);
+                null);
+        service.saveUser(userDto);
 
-        UserDto userByEmail = service.getUserByEmail(user.getEmail());
+        UserDto userDtoByEmail = service.getUserByEmail(userDto.getEmail());
 
-        assertThat(user.getId(), notNullValue());
-        assertThat(user.getFirstName(), equalTo(userByEmail.getFirstName()));
-        assertThat(user.getLastName(), equalTo(userByEmail.getLastName()));
-        assertThat(user.getEmail(), equalTo(userByEmail.getEmail()));
-        assertThat(user.getState(), equalTo(userByEmail.getState()));
-        assertThat(user.getRegistrationDate(), notNullValue());
+        assertThat(userDto.getId(), notNullValue());
+        assertThat(userDto.getFirstName(), equalTo(userDtoByEmail.getFirstName()));
+        assertThat(userDto.getLastName(), equalTo(userDtoByEmail.getLastName()));
+        assertThat(userDto.getEmail(), equalTo(userDtoByEmail.getEmail()));
+        assertThat(UserState.ACTIVE, equalTo(userDtoByEmail.getState()));
+        assertThat(userDto.getRegistrationDate(), notNullValue());
     }
 }

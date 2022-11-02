@@ -1,15 +1,18 @@
 package ru.practicum.item;
 
+import ru.practicum.item.dto.ItemDto;
+import ru.practicum.item.model.GetItemRequest;
+import ru.practicum.item.model.ModifyItemRequest;
+
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public interface ItemService {
 
     List<ItemDto> getItems(GetItemRequest req);
 
-    ItemDto update(ModifyItemRequest req) throws IllegalAccessException;
+    ItemDto updateItem(ModifyItemRequest req) throws IllegalAccessException;
 
     ItemDto addNewItem(Long userId, ItemDto item);
 
