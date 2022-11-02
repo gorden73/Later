@@ -10,11 +10,17 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class GetItemRequest {
+
     private long userId;
+
     private State state;
+
     private ContentType contentType;
+
     private Sort sort;
+
     private Integer limit;
+
     private List<String> tags;
 
     public GetItemRequest(long userId, String state, String contentType, String sort, Integer limit,
@@ -34,6 +40,8 @@ public class GetItemRequest {
     }
 
     public enum State {UNREAD, READ, ALL }
+
     public enum ContentType { ARTICLE, VIDEO, IMAGE, ALL }
+
     public enum Sort { NEWEST, OLDEST, TITLE, SITE }
 }

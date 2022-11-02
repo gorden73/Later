@@ -1,8 +1,9 @@
-package ru.practicum.item;
+package ru.practicum.item.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import ru.practicum.item.model.Item;
+import ru.practicum.item.model.ItemInfo;
 
 import java.util.List;
 import java.util.Optional;

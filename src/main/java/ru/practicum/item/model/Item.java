@@ -15,6 +15,7 @@ import java.util.Set;
 @Table(name = "items")
 @NoArgsConstructor
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +31,7 @@ public class Item {
     private Set<String> tags = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "item_state")
     private ItemState itemState;
 
     @Column(name = "resolved_url")

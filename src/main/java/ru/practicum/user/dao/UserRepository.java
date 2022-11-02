@@ -1,9 +1,9 @@
-package ru.practicum.user;
+package ru.practicum.user.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.user.model.User;
 
-interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     User getUserByEmail(String email);
 }

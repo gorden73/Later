@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.item.dto.ItemDto;
 import ru.practicum.item.model.GetItemRequest;
+import ru.practicum.item.model.ItemInfoWithUrlState;
 import ru.practicum.item.model.ModifyItemRequest;
 
 import java.net.URISyntaxException;
@@ -18,6 +19,12 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    @PostMapping
+    public ItemDto addItem(@RequestHeader("X-Later-User-Id") Long userId,
+                           @RequestBody ItemDto itemDTO) {
+        return itemService.addNewItem(userId, itemDTO);
+    }
+
     @GetMapping
     public List<ItemDto> getItems(@RequestHeader("X-Later-User-Id") Long userId,
                                   @RequestParam(defaultValue = "unread") String state,
@@ -27,12 +34,6 @@ public class ItemController {
                                   @RequestParam(required = false) List<String> tags) {
         final GetItemRequest req = new GetItemRequest(userId, state, contentType, sort, limit, tags);
         return itemService.getItems(req);
-    }
-
-    @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Later-User-Id") Long userId,
-                           @RequestBody ItemDto itemDTO) {
-        return itemService.addNewItem(userId, itemDTO);
     }
 
     @PatchMapping("/{itemId}")
