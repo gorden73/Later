@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.practicum</groupId>
-    <artifactId>module4_spring_with_boot</artifactId>
+    <artifactId>Later</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

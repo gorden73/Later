@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import ru.practicum.user.dto.UserDto;
+import ru.practicum.user.model.UserState;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
